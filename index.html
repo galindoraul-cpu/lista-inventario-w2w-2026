@@ -1,0 +1,2279 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ejercicio | Participantes</title>
+
+
+    <!-- =====================================================
+         CSS
+    ====================================================== -->
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            background:
+                radial-gradient(
+                    circle at top right,
+                    #173b68 0%,
+                    #071a30 45%,
+                    #04101f 100%
+                );
+
+            color: white;
+
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           UTILIDADES
+        ========================== */
+
+        .hidden {
+            display: none !important;
+        }
+
+
+        /* =========================
+           LOGIN
+        ========================== */
+
+        .login-container {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 20px;
+        }
+
+
+        .login-card {
+
+            width: 100%;
+
+            max-width: 420px;
+
+            background: rgba(255,255,255,0.97);
+
+            color: #132238;
+
+            border-radius: 20px;
+
+            padding: 45px 40px;
+
+            box-shadow:
+                0 25px 70px rgba(0,0,0,0.35);
+
+            text-align: center;
+        }
+
+
+        .logo-circle {
+
+            width: 70px;
+
+            height: 70px;
+
+            margin: 0 auto 20px;
+
+            border-radius: 50%;
+
+            background: #1261a0;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            color: white;
+
+            font-size: 22px;
+
+            font-weight: bold;
+        }
+
+
+        .login-card h1 {
+
+            font-size: 30px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .subtitle {
+
+            color: #657386;
+
+            margin-bottom: 30px;
+
+            line-height: 1.5;
+        }
+
+
+        label {
+
+            display: block;
+
+            text-align: left;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            margin-bottom: 8px;
+
+            color: #34445a;
+        }
+
+
+        input {
+
+            width: 100%;
+
+            padding: 14px 15px;
+
+            border: 1px solid #d6dce4;
+
+            border-radius: 10px;
+
+            font-size: 15px;
+
+            outline: none;
+
+            transition: 0.2s;
+
+            margin-bottom: 18px;
+        }
+
+
+        input:focus {
+
+            border-color: #1976c9;
+
+            box-shadow:
+                0 0 0 3px rgba(25,118,201,0.12);
+        }
+
+
+        .primary-button {
+
+            width: 100%;
+
+            padding: 14px 20px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #1261a0;
+
+            color: white;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .primary-button:hover {
+
+            background: #0d4f86;
+
+            transform: translateY(-1px);
+        }
+
+
+        .admin-link {
+
+            margin-top: 25px;
+
+            background: none;
+
+            border: none;
+
+            color: #1261a0;
+
+            cursor: pointer;
+
+            font-size: 13px;
+        }
+
+
+        .message {
+
+            margin-top: 15px;
+
+            font-size: 14px;
+
+            color: #c0392b;
+        }
+
+
+        /* =========================
+           PERFIL
+        ========================== */
+
+        .profile-container {
+
+            max-width: 1100px;
+
+            margin: 0 auto;
+
+            padding: 35px 25px 60px;
+        }
+
+
+        .top-bar {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .small-label {
+
+            font-size: 12px;
+
+            letter-spacing: 2px;
+
+            color: #78b7e8;
+
+            font-weight: bold;
+        }
+
+
+        .top-bar h2 {
+
+            margin-top: 5px;
+
+            font-size: 25px;
+        }
+
+
+        .logout-button {
+
+            border: 1px solid rgba(255,255,255,0.3);
+
+            background: rgba(255,255,255,0.08);
+
+            color: white;
+
+            padding: 10px 18px;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+
+        .logout-button:hover {
+
+            background: rgba(255,255,255,0.16);
+        }
+
+
+        .welcome-card {
+
+            background: white;
+
+            color: #17263a;
+
+            border-radius: 18px;
+
+            padding: 30px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 22px;
+
+            box-shadow:
+                0 20px 50px rgba(0,0,0,0.18);
+
+            margin-bottom: 25px;
+        }
+
+
+        .welcome-icon {
+
+            min-width: 60px;
+
+            height: 60px;
+
+            border-radius: 50%;
+
+            background: #e6f3ff;
+
+            color: #1261a0;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 26px;
+
+            font-weight: bold;
+        }
+
+
+        .welcome-small {
+
+            color: #718096;
+
+            font-size: 14px;
+
+            margin-bottom: 4px;
+        }
+
+
+        .welcome-card h1 {
+
+            font-size: 30px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .welcome-card p {
+
+            color: #657386;
+
+            line-height: 1.5;
+        }
+
+
+        /* =========================
+           INFORMACIÓN
+        ========================== */
+
+        .information-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3,1fr);
+
+            gap: 18px;
+
+            margin-bottom: 25px;
+        }
+
+
+        .info-card {
+
+            background: rgba(255,255,255,0.96);
+
+            color: #16253a;
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            min-height: 130px;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: center;
+
+            box-shadow:
+                0 15px 40px rgba(0,0,0,0.14);
+        }
+
+
+        .info-label {
+
+            font-size: 11px;
+
+            letter-spacing: 1px;
+
+            color: #718096;
+
+            font-weight: bold;
+
+            margin-bottom: 12px;
+        }
+
+
+        .info-card strong {
+
+            font-size: 20px;
+        }
+
+
+        .instructions-card {
+
+            background: rgba(255,255,255,0.08);
+
+            border: 1px solid rgba(255,255,255,0.1);
+
+            border-radius: 16px;
+
+            padding: 25px;
+        }
+
+
+        .instructions-card h2 {
+
+            margin-bottom: 10px;
+        }
+
+
+        .instructions-card p {
+
+            color: #c6d4e3;
+
+            line-height: 1.6;
+        }
+
+
+        /* =========================
+           ADMIN
+        ========================== */
+
+        .admin-container {
+
+            max-width: 1000px;
+
+            margin: auto;
+
+            padding: 40px 25px 60px;
+        }
+
+
+        .admin-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .admin-header h1 {
+
+            margin-top: 5px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .admin-header p {
+
+            color: #b9c8d9;
+        }
+
+
+        .admin-card {
+
+            background: white;
+
+            color: #17263a;
+
+            border-radius: 20px;
+
+            padding: 40px;
+
+            text-align: center;
+
+            box-shadow:
+                0 20px 60px rgba(0,0,0,0.25);
+
+            margin-bottom: 25px;
+        }
+
+
+        .admin-icon {
+
+            width: 65px;
+
+            height: 65px;
+
+            border-radius: 50%;
+
+            background: #e6f3ff;
+
+            color: #1261a0;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            margin: 0 auto 20px;
+
+            font-size: 30px;
+
+            font-weight: bold;
+        }
+
+
+        .admin-card h2 {
+
+            margin-bottom: 10px;
+        }
+
+
+        .admin-card > p {
+
+            color: #657386;
+
+            margin-bottom: 25px;
+        }
+
+
+        .excel-format {
+
+            background: #f4f7fa;
+
+            border-radius: 12px;
+
+            padding: 20px;
+
+            margin-bottom: 25px;
+
+            text-align: left;
+        }
+
+
+        .excel-format h3 {
+
+            font-size: 15px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .excel-format p {
+
+            color: #657386;
+
+            font-size: 14px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .column-list {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 8px;
+        }
+
+
+        .column-list span {
+
+            background: #e5edf5;
+
+            color: #27516f;
+
+            padding: 7px 10px;
+
+            border-radius: 6px;
+
+            font-size: 12px;
+
+            font-family: monospace;
+        }
+
+
+        .file-label {
+
+            display: inline-block;
+
+            padding: 13px 20px;
+
+            background: #edf5fb;
+
+            border: 1px dashed #4b91c7;
+
+            color: #1261a0;
+
+            border-radius: 9px;
+
+            cursor: pointer;
+
+            text-align: center;
+
+            margin-bottom: 10px;
+        }
+
+
+        #excelFile {
+
+            display: none;
+        }
+
+
+        .file-name {
+
+            color: #718096;
+
+            font-size: 13px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .admin-upload {
+
+            max-width: 400px;
+
+            margin: auto;
+        }
+
+
+        .upload-status {
+
+            margin-top: 20px;
+
+            font-size: 14px;
+
+            font-weight: 600;
+        }
+
+
+        /* =========================
+           ADMIN INFO
+        ========================== */
+
+        .admin-info-card {
+
+            background: rgba(255,255,255,0.08);
+
+            border-radius: 16px;
+
+            padding: 30px;
+        }
+
+
+        .admin-info-card h2 {
+
+            margin-bottom: 20px;
+        }
+
+
+        .steps {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2,1fr);
+
+            gap: 15px;
+        }
+
+
+        .steps > div {
+
+            display: flex;
+
+            gap: 12px;
+
+            align-items: flex-start;
+        }
+
+
+        .steps span {
+
+            min-width: 30px;
+
+            height: 30px;
+
+            background: #1261a0;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-weight: bold;
+        }
+
+
+        .steps p {
+
+            color: #c7d4e1;
+
+            line-height: 1.5;
+
+            font-size: 14px;
+        }
+
+
+        /* =========================
+           MODAL ADMIN
+        ========================== */
+
+        .modal {
+
+            position: fixed;
+
+            inset: 0;
+
+            background: rgba(0,0,0,0.65);
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 20px;
+
+            z-index: 1000;
+        }
+
+
+        .modal-card {
+
+            background: white;
+
+            color: #17263a;
+
+            width: 100%;
+
+            max-width: 400px;
+
+            padding: 35px;
+
+            border-radius: 18px;
+
+            position: relative;
+
+            box-shadow:
+                0 30px 80px rgba(0,0,0,0.4);
+        }
+
+
+        .close-modal {
+
+            position: absolute;
+
+            right: 18px;
+
+            top: 15px;
+
+            border: none;
+
+            background: none;
+
+            font-size: 28px;
+
+            color: #718096;
+
+            cursor: pointer;
+        }
+
+
+        .modal-icon {
+
+            font-size: 35px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .modal-card h2 {
+
+            margin-bottom: 8px;
+        }
+
+
+        .modal-card > p {
+
+            color: #718096;
+
+            margin-bottom: 25px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width:700px) {
+
+            .information-grid {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .steps {
+
+                grid-template-columns: 1fr;
+            }
+
+
+            .top-bar,
+            .admin-header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+                gap: 15px;
+            }
+
+
+            .welcome-card {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .admin-card {
+
+                padding: 25px;
+            }
+
+
+            .login-card {
+
+                padding: 35px 25px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =====================================================
+         LOGIN PARTICIPANTE
+    ====================================================== -->
+
+    <main id="loginSection" class="login-container">
+
+        <div class="login-card">
+
+            <div class="logo-circle">
+                EX
+            </div>
+
+            <h1>Ejercicio</h1>
+
+            <p class="subtitle">
+                Ingresa tu número de control para continuar.
+            </p>
+
+
+            <form id="loginForm">
+
+                <label for="numeroControl">
+                    Número de control
+                </label>
+
+                <input
+                    type="text"
+                    id="numeroControl"
+                    placeholder="Ej. 123456"
+                    autocomplete="off"
+                    required
+                >
+
+
+                <button
+                    type="submit"
+                    class="primary-button">
+
+                    Ingresar
+
+                </button>
+
+            </form>
+
+
+            <p id="loginMessage" class="message"></p>
+
+
+            <button
+                id="adminButton"
+                class="admin-link">
+
+                Acceso administrativo
+
+            </button>
+
+        </div>
+
+    </main>
+
+
+
+    <!-- =====================================================
+         PERFIL PARTICIPANTE
+    ====================================================== -->
+
+    <main
+        id="profileSection"
+        class="profile-container hidden">
+
+
+        <div class="top-bar">
+
+            <div>
+
+                <span class="small-label">
+                    EJERCICIO
+                </span>
+
+                <h2>
+                    Información del participante
+                </h2>
+
+            </div>
+
+
+            <button
+                id="logoutButton"
+                class="logout-button">
+
+                Cerrar sesión
+
+            </button>
+
+        </div>
+
+
+        <section class="welcome-card">
+
+            <div class="welcome-icon">
+                ✓
+            </div>
+
+
+            <div>
+
+                <p class="welcome-small">
+                    ¡Bienvenido!
+                </p>
+
+                <h1 id="userName">
+                    Nombre del participante
+                </h1>
+
+                <p>
+                    Tu información para el ejercicio aparece a continuación.
+                </p>
+
+            </div>
+
+        </section>
+
+
+
+        <section class="information-grid">
+
+
+            <div class="info-card">
+
+                <span class="info-label">
+                    NÚMERO DE CONTROL
+                </span>
+
+                <strong id="userControl">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <span class="info-label">
+                    ÁREA
+                </span>
+
+                <strong id="userArea">
+                    -
+                </strong>
+
+            </div>
+
+
+            <div class="info-card">
+
+                <span class="info-label">
+                    ROL EN EL EJERCICIO
+                </span>
+
+                <strong id="userRole">
+                    -
+                </strong>
+
+            </div>
+
+
+        </section>
+
+
+
+        <section class="instructions-card">
+
+            <h2>
+                Tu participación
+            </h2>
+
+            <p>
+                Revisa cuidadosamente la información asignada.
+                Tu área y rol determinarán tu participación dentro del ejercicio.
+            </p>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         PANEL ADMINISTRADOR
+    ====================================================== -->
+
+    <main
+        id="adminSection"
+        class="admin-container hidden">
+
+
+        <div class="admin-header">
+
+            <div>
+
+                <span class="small-label">
+                    ADMINISTRACIÓN
+                </span>
+
+                <h1>
+                    Panel de administración
+                </h1>
+
+                <p>
+                    Actualiza la información de los participantes desde un archivo Excel.
+                </p>
+
+            </div>
+
+
+            <button
+                id="adminLogoutButton"
+                class="logout-button">
+
+                Cerrar sesión
+
+            </button>
+
+        </div>
+
+
+
+        <section class="admin-card">
+
+
+            <div class="admin-icon">
+                ↑
+            </div>
+
+
+            <h2>
+                Actualizar participantes
+            </h2>
+
+
+            <p>
+                Selecciona el archivo Excel que contiene la información actualizada.
+            </p>
+
+
+
+            <div class="excel-format">
+
+                <h3>
+                    Formato esperado
+                </h3>
+
+                <p>
+                    El archivo debe contener estas columnas:
+                </p>
+
+
+                <div class="column-list">
+
+                    <span>numeroControl</span>
+
+                    <span>nombre</span>
+
+                    <span>area</span>
+
+                    <span>rol</span>
+
+                </div>
+
+            </div>
+
+
+
+            <label
+                for="excelFile"
+                class="file-label">
+
+                Seleccionar archivo Excel
+
+            </label>
+
+
+            <input
+                type="file"
+                id="excelFile"
+                accept=".xlsx,.xls"
+            >
+
+
+            <p
+                id="fileName"
+                class="file-name">
+
+                Ningún archivo seleccionado
+
+            </p>
+
+
+
+            <button
+                id="uploadExcelButton"
+                class="primary-button admin-upload">
+
+                Actualizar Firestore
+
+            </button>
+
+
+            <div
+                id="uploadStatus"
+                class="upload-status">
+
+            </div>
+
+
+        </section>
+
+
+
+        <section class="admin-info-card">
+
+            <h2>
+                ¿Cómo funciona?
+            </h2>
+
+
+            <div class="steps">
+
+
+                <div>
+
+                    <span>
+                        1
+                    </span>
+
+                    <p>
+                        Prepara tu Excel con las columnas indicadas.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        2
+                    </span>
+
+                    <p>
+                        Selecciona el archivo desde esta página.
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        3
+                    </span>
+
+                    <p>
+                        Presiona "Actualizar Firestore".
+                    </p>
+
+                </div>
+
+
+                <div>
+
+                    <span>
+                        4
+                    </span>
+
+                    <p>
+                        Los participantes podrán consultar inmediatamente su información.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+
+    <!-- =====================================================
+         MODAL LOGIN ADMIN
+    ====================================================== -->
+
+    <div
+        id="adminModal"
+        class="modal hidden">
+
+
+        <div class="modal-card">
+
+
+            <button
+                id="closeAdminModal"
+                class="close-modal">
+
+                ×
+
+            </button>
+
+
+            <div class="modal-icon">
+                🔐
+            </div>
+
+
+            <h2>
+                Acceso administrativo
+            </h2>
+
+
+            <p>
+                Ingresa las credenciales del administrador.
+            </p>
+
+
+
+            <form id="adminLoginForm">
+
+
+                <label for="adminEmail">
+                    Correo
+                </label>
+
+
+                <input
+                    type="email"
+                    id="adminEmail"
+                    placeholder="admin@ejercicio.com"
+                    required
+                >
+
+
+
+                <label for="adminPassword">
+                    Contraseña
+                </label>
+
+
+                <input
+                    type="password"
+                    id="adminPassword"
+                    placeholder="Contraseña"
+                    required
+                >
+
+
+
+                <button
+                    type="submit"
+                    class="primary-button">
+
+                    Entrar como administrador
+
+                </button>
+
+
+            </form>
+
+
+            <p
+                id="adminLoginMessage"
+                class="message">
+
+            </p>
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         JAVASCRIPT + FIREBASE
+    ====================================================== -->
+
+    <script type="module">
+
+
+        /* =================================================
+           FIREBASE
+        ================================================== */
+
+
+        import {
+            initializeApp
+        }
+        from
+        "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
+
+
+        import {
+            getFirestore,
+            doc,
+            getDoc,
+            writeBatch
+        }
+        from
+        "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
+
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut
+        }
+        from
+        "https://www.gstatic.com/firebasejs/12.19.0/firebase-auth.js";
+
+
+
+        /* =================================================
+           CONFIGURACIÓN FIREBASE
+        ================================================== */
+
+
+        /*
+            REEMPLAZA ESTOS DATOS CON LOS DE TU PROYECTO.
+
+            Firebase Console
+            ↓
+            Configuración del proyecto
+            ↓
+            Tus aplicaciones
+            ↓
+            Aplicación web
+        */
+
+
+      const firebaseConfig = {
+  apiKey: "AIzaSyB74FE2MdInISGR6X-cDoOiPkteNItt07A",
+  authDomain: "lista-inv-2026.firebaseapp.com",
+  projectId: "lista-inv-2026",
+  storageBucket: "lista-inv-2026.firebasestorage.app",
+  messagingSenderId: "951709784648",
+  appId: "1:951709784648:web:a9152ddb355b2a3aa5567d",
+  measurementId: "G-2E42TLQ27S"
+};
+
+
+
+
+        /* Inicializar Firebase */
+
+
+        const app =
+            initializeApp(firebaseConfig);
+
+
+        const db =
+            getFirestore(app);
+
+
+        const auth =
+            getAuth(app);
+
+
+
+        /* =================================================
+           ELEMENTOS
+        ================================================== */
+
+
+        const loginSection =
+            document.getElementById(
+                "loginSection"
+            );
+
+
+        const profileSection =
+            document.getElementById(
+                "profileSection"
+            );
+
+
+        const adminSection =
+            document.getElementById(
+                "adminSection"
+            );
+
+
+        const adminModal =
+            document.getElementById(
+                "adminModal"
+            );
+
+
+        const loginForm =
+            document.getElementById(
+                "loginForm"
+            );
+
+
+        const adminLoginForm =
+            document.getElementById(
+                "adminLoginForm"
+            );
+
+
+        const logoutButton =
+            document.getElementById(
+                "logoutButton"
+            );
+
+
+        const adminLogoutButton =
+            document.getElementById(
+                "adminLogoutButton"
+            );
+
+
+        const adminButton =
+            document.getElementById(
+                "adminButton"
+            );
+
+
+        const closeAdminModal =
+            document.getElementById(
+                "closeAdminModal"
+            );
+
+
+        const excelFile =
+            document.getElementById(
+                "excelFile"
+            );
+
+
+        const uploadExcelButton =
+            document.getElementById(
+                "uploadExcelButton"
+            );
+
+
+        const fileName =
+            document.getElementById(
+                "fileName"
+            );
+
+
+        const uploadStatus =
+            document.getElementById(
+                "uploadStatus"
+            );
+
+
+
+        /* =================================================
+           CAMBIAR VISTAS
+        ================================================== */
+
+
+        function showLogin() {
+
+            loginSection
+                .classList
+                .remove("hidden");
+
+
+            profileSection
+                .classList
+                .add("hidden");
+
+
+            adminSection
+                .classList
+                .add("hidden");
+
+        }
+
+
+
+        function showProfile() {
+
+            loginSection
+                .classList
+                .add("hidden");
+
+
+            profileSection
+                .classList
+                .remove("hidden");
+
+
+            adminSection
+                .classList
+                .add("hidden");
+
+        }
+
+
+
+        function showAdmin() {
+
+            loginSection
+                .classList
+                .add("hidden");
+
+
+            profileSection
+                .classList
+                .add("hidden");
+
+
+            adminSection
+                .classList
+                .remove("hidden");
+
+        }
+
+
+
+        /* =================================================
+           LOGIN PARTICIPANTE
+        ================================================== */
+
+
+        loginForm.addEventListener(
+            "submit",
+            async (event) => {
+
+                event.preventDefault();
+
+
+                const numeroControl =
+                    document
+                    .getElementById(
+                        "numeroControl"
+                    )
+                    .value
+                    .trim();
+
+
+                const message =
+                    document.getElementById(
+                        "loginMessage"
+                    );
+
+
+                if (!numeroControl) {
+
+                    message.textContent =
+                        "Ingresa tu número de control.";
+
+                    return;
+
+                }
+
+
+                message.textContent =
+                    "Buscando información...";
+
+
+                try {
+
+
+                    /*
+                        Firestore:
+
+                        participantes
+                        └── numeroControl
+                    */
+
+
+                    const participanteRef =
+                        doc(
+                            db,
+                            "participantes",
+                            numeroControl
+                        );
+
+
+                    const snapshot =
+                        await getDoc(
+                            participanteRef
+                        );
+
+
+                    if (!snapshot.exists()) {
+
+                        message.textContent =
+                            "No encontramos un participante con ese número de control.";
+
+                        return;
+
+                    }
+
+
+                    const data =
+                        snapshot.data();
+
+
+                    document
+                        .getElementById(
+                            "userName"
+                        )
+                        .textContent =
+                        data.nombre ||
+                        "Sin nombre";
+
+
+                    document
+                        .getElementById(
+                            "userControl"
+                        )
+                        .textContent =
+                        data.numeroControl ||
+                        numeroControl;
+
+
+                    document
+                        .getElementById(
+                            "userArea"
+                        )
+                        .textContent =
+                        data.area ||
+                        "Sin área asignada";
+
+
+                    document
+                        .getElementById(
+                            "userRole"
+                        )
+                        .textContent =
+                        data.rol ||
+                        "Sin rol asignado";
+
+
+                    message.textContent = "";
+
+
+                    showProfile();
+
+
+                }
+                catch (error) {
+
+                    console.error(error);
+
+
+                    message.textContent =
+                        "Ocurrió un error al consultar la información.";
+
+                }
+
+            }
+        );
+
+
+
+        /* =================================================
+           LOGOUT PARTICIPANTE
+        ================================================== */
+
+
+        logoutButton.addEventListener(
+            "click",
+            () => {
+
+                document
+                    .getElementById(
+                        "numeroControl"
+                    )
+                    .value = "";
+
+
+                showLogin();
+
+            }
+        );
+
+
+
+        /* =================================================
+           ABRIR LOGIN ADMIN
+        ================================================== */
+
+
+        adminButton.addEventListener(
+            "click",
+            () => {
+
+                adminModal
+                    .classList
+                    .remove("hidden");
+
+            }
+        );
+
+
+
+        /* =================================================
+           CERRAR LOGIN ADMIN
+        ================================================== */
+
+
+        closeAdminModal.addEventListener(
+            "click",
+            () => {
+
+                adminModal
+                    .classList
+                    .add("hidden");
+
+            }
+        );
+
+
+
+        /* =================================================
+           LOGIN ADMINISTRADOR
+        ================================================== */
+
+
+        adminLoginForm.addEventListener(
+            "submit",
+            async (event) => {
+
+                event.preventDefault();
+
+
+                const email =
+                    document
+                    .getElementById(
+                        "adminEmail"
+                    )
+                    .value
+                    .trim();
+
+
+                const password =
+                    document
+                    .getElementById(
+                        "adminPassword"
+                    )
+                    .value;
+
+
+                const message =
+                    document.getElementById(
+                        "adminLoginMessage"
+                    );
+
+
+                message.textContent =
+                    "Verificando acceso...";
+
+
+                try {
+
+
+                    await signInWithEmailAndPassword(
+                        auth,
+                        email,
+                        password
+                    );
+
+
+                    message.textContent = "";
+
+
+                    adminModal
+                        .classList
+                        .add("hidden");
+
+
+                    showAdmin();
+
+
+                }
+                catch (error) {
+
+                    console.error(error);
+
+
+                    message.textContent =
+                        "Correo o contraseña incorrectos.";
+
+                }
+
+            }
+        );
+
+
+
+        /* =================================================
+           ESTADO AUTH
+        ================================================== */
+
+
+        onAuthStateChanged(
+            auth,
+            (user) => {
+
+                if (user) {
+
+                    showAdmin();
+
+                }
+
+            }
+        );
+
+
+
+        /* =================================================
+           LOGOUT ADMIN
+        ================================================== */
+
+
+        adminLogoutButton.addEventListener(
+            "click",
+            async () => {
+
+                try {
+
+                    await signOut(auth);
+
+                    showLogin();
+
+                }
+                catch (error) {
+
+                    console.error(error);
+
+                }
+
+            }
+        );
+
+
+
+        /* =================================================
+           SELECCIONAR EXCEL
+        ================================================== */
+
+
+        excelFile.addEventListener(
+            "change",
+            () => {
+
+                if (
+                    excelFile.files.length === 0
+                ) {
+
+                    fileName.textContent =
+                        "Ningún archivo seleccionado";
+
+                    return;
+
+                }
+
+
+                fileName.textContent =
+                    excelFile.files[0].name;
+
+            }
+        );
+
+
+
+        /* =================================================
+           SUBIR EXCEL
+        ================================================== */
+
+
+        uploadExcelButton.addEventListener(
+            "click",
+            async () => {
+
+
+                const file =
+                    excelFile.files[0];
+
+
+                if (!file) {
+
+                    uploadStatus.textContent =
+                        "Selecciona un archivo Excel.";
+
+                    return;
+
+                }
+
+
+                if (!auth.currentUser) {
+
+                    uploadStatus.textContent =
+                        "Debes iniciar sesión como administrador.";
+
+                    return;
+
+                }
+
+
+                uploadStatus.textContent =
+                    "Leyendo archivo Excel...";
+
+
+                try {
+
+
+                    /*
+                        Cargar SheetJS
+                        para leer XLSX
+                    */
+
+
+                    const XLSX =
+                        await import(
+                            "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs"
+                        );
+
+
+                    const arrayBuffer =
+                        await file.arrayBuffer();
+
+
+                    const workbook =
+                        XLSX.read(
+                            arrayBuffer,
+                            {
+                                type: "array"
+                            }
+                        );
+
+
+                    const firstSheet =
+                        workbook.Sheets[
+                            workbook.SheetNames[0]
+                        ];
+
+
+                    const rows =
+                        XLSX.utils.sheet_to_json(
+                            firstSheet,
+                            {
+                                defval: ""
+                            }
+                        );
+
+
+                    if (rows.length === 0) {
+
+                        uploadStatus.textContent =
+                            "El archivo no contiene registros.";
+
+                        return;
+
+                    }
+
+
+                    /*
+                        Columnas requeridas
+                    */
+
+
+                    const requiredColumns = [
+
+                        "numeroControl",
+
+                        "nombre",
+
+                        "area",
+
+                        "rol"
+
+                    ];
+
+
+                    const firstRow =
+                        rows[0];
+
+
+                    const missingColumns =
+                        requiredColumns.filter(
+                            column =>
+                                !(column in firstRow)
+                        );
+
+
+                    if (
+                        missingColumns.length > 0
+                    ) {
+
+                        uploadStatus.textContent =
+                            "Faltan columnas: " +
+                            missingColumns.join(", ");
+
+                        return;
+
+                    }
+
+
+                    uploadStatus.textContent =
+                        `Procesando ${rows.length} participantes...`;
+
+
+
+                    /*
+                        Firestore Batch
+                    */
+
+
+                    let batch =
+                        writeBatch(db);
+
+
+                    let operationCount = 0;
+
+                    let totalUploaded = 0;
+
+
+
+                    for (
+                        const row of rows
+                    ) {
+
+
+                        const numeroControl =
+                            String(
+                                row.numeroControl
+                            )
+                            .trim();
+
+
+                        if (!numeroControl) {
+
+                            continue;
+
+                        }
+
+
+                        const participanteRef =
+                            doc(
+                                db,
+                                "participantes",
+                                numeroControl
+                            );
+
+
+                        batch.set(
+
+                            participanteRef,
+
+                            {
+
+                                numeroControl:
+                                    numeroControl,
+
+                                nombre:
+                                    String(
+                                        row.nombre
+                                    ).trim(),
+
+                                area:
+                                    String(
+                                        row.area
+                                    ).trim(),
+
+                                rol:
+                                    String(
+                                        row.rol
+                                    ).trim(),
+
+                                actualizado:
+                                    new Date()
+                                    .toISOString()
+
+                            },
+
+                            {
+                                merge: true
+                            }
+
+                        );
+
+
+                        operationCount++;
+
+                        totalUploaded++;
+
+
+
+                        /*
+                            Firestore permite
+                            hasta 500 operaciones
+                            aproximadamente por batch.
+
+                            Usamos 450 para tener
+                            margen.
+                        */
+
+
+                        if (
+                            operationCount === 450
+                        ) {
+
+                            await batch.commit();
+
+
+                            batch =
+                                writeBatch(db);
+
+
+                            operationCount = 0;
+
+                        }
+
+                    }
+
+
+
+                    /*
+                        Subir operaciones restantes
+                    */
+
+
+                    if (
+                        operationCount > 0
+                    ) {
+
+                        await batch.commit();
+
+                    }
+
+
+
+                    uploadStatus.textContent =
+                        `✓ Actualización completada. ${totalUploaded} participantes procesados.`;
+
+
+                    uploadStatus.style.color =
+                        "#218739";
+
+
+                    excelFile.value = "";
+
+
+                    fileName.textContent =
+                        "Ningún archivo seleccionado";
+
+
+                }
+                catch (error) {
+
+                    console.error(error);
+
+
+                    uploadStatus.textContent =
+                        "Error al actualizar Firestore: " +
+                        error.message;
+
+
+                    uploadStatus.style.color =
+                        "#c0392b";
+
+                }
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>
+```
