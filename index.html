@@ -1377,14 +1377,17 @@
         "https://www.gstatic.com/firebasejs/12.19.0/firebase-app.js";
 
 
-        import {
-            getFirestore,
-            doc,
-            getDoc,
-            writeBatch
-        }
-        from
-        "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+       
+import {
+    getFirestore,
+    doc,
+    getDoc,
+    getDocs,
+    collection,
+    deleteDoc,
+    writeBatch
+} from "https://www.gstatic.com/firebasejs/12.19.0/firebase-firestore.js";
+
 
 
         import {
@@ -1955,312 +1958,335 @@
 
 
 
-        /* =================================================
-           SUBIR EXCEL
-        ================================================== */
+     
+/* =================================================
+   SUBIR EXCEL Y SINCRONIZAR FIRESTORE
+================================================== */
 
+uploadExcelButton.addEventListener("click", async () => {
 
-        uploadExcelButton.addEventListener(
-            "click",
-            async () => {
+    const file = excelFile.files[0];
 
+    if (!file) {
+        uploadStatus.textContent = "Selecciona un archivo Excel.";
+        uploadStatus.style.color = "#c0392b";
+        return;
+    }
 
-                const file =
-                    excelFile.files[0];
+    if (!auth.currentUser) {
+        uploadStatus.textContent =
+            "Debes iniciar sesión como administrador.";
+        uploadStatus.style.color = "#c0392b";
+        return;
+    }
 
+    uploadStatus.textContent = "Leyendo archivo Excel...";
+    uploadStatus.style.color = "";
 
-                if (!file) {
+    try {
 
-                    uploadStatus.textContent =
-                        "Selecciona un archivo Excel.";
+        // 1. Leer el Excel
 
-                    return;
+        const XLSX = await import(
+            "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs"
+        );
 
+        const arrayBuffer = await file.arrayBuffer();
+
+        const workbook = XLSX.read(arrayBuffer, {
+            type: "array"
+        });
+
+        if (!workbook.SheetNames.length) {
+            throw new Error("El archivo no contiene hojas.");
+        }
+
+        const firstSheet =
+            workbook.Sheets[workbook.SheetNames[0]];
+
+        const rows = XLSX.utils.sheet_to_json(firstSheet, {
+            defval: ""
+        });
+
+        if (rows.length === 0) {
+            throw new Error(
+                "El archivo no contiene participantes. No se realizaron cambios."
+            );
+        }
+
+        // 2. Validar las columnas requeridas
+
+        const requiredColumns = [
+            "numeroControl",
+            "nombre",
+            "area",
+            "rol",
+            "turno"
+        ];
+
+        const firstRow = rows[0];
+
+        const missingColumns = requiredColumns.filter(
+            column => !(column in firstRow)
+        );
+
+        if (missingColumns.length > 0) {
+            throw new Error(
+                "Faltan columnas requeridas: " +
+                missingColumns.join(", ")
+            );
+        }
+
+        // 3. Validar cada participante antes de modificar Firestore
+
+        const participantesExcel = [];
+        const numerosVistos = new Set();
+
+        for (let i = 0; i < rows.length; i++) {
+
+            const row = rows[i];
+
+            const participante = {
+                numeroControl: String(
+                    row.numeroControl ?? ""
+                ).trim(),
+
+                nombre: String(
+                    row.nombre ?? ""
+                ).trim(),
+
+                area: String(
+                    row.area ?? ""
+                ).trim(),
+
+                rol: String(
+                    row.rol ?? ""
+                ).trim(),
+
+                turno: String(
+                    row.turno ?? ""
+                ).trim()
+            };
+
+            // Ignorar filas completamente vacías
+
+            const filaVacia = requiredColumns.every(
+                column => String(row[column] ?? "").trim() === ""
+            );
+
+            if (filaVacia) {
+                continue;
+            }
+
+            // Si hay datos, debe existir el número de empleado
+
+            if (!participante.numeroControl) {
+                throw new Error(
+                    `La fila de Excel ${i + 2} tiene datos, pero no tiene numeroControl. Corrige el archivo.`
+                );
+            }
+
+            // No permitir números duplicados
+
+            if (numerosVistos.has(participante.numeroControl)) {
+                throw new Error(
+                    `El número de empleado ${participante.numeroControl} está duplicado en el Excel.`
+                );
+            }
+
+            numerosVistos.add(participante.numeroControl);
+
+            // No permitir participantes con datos incompletos
+
+            const camposVacios = [
+                "nombre",
+                "area",
+                "rol",
+                "turno"
+            ].filter(campo => !participante[campo]);
+
+            if (camposVacios.length > 0) {
+                throw new Error(
+                    `El participante ${participante.numeroControl} tiene campos vacíos: ${camposVacios.join(", ")}.`
+                );
+            }
+
+            participantesExcel.push(participante);
+        }
+
+        if (participantesExcel.length === 0) {
+            throw new Error(
+                "No se encontraron participantes válidos. No se realizaron cambios."
+            );
+        }
+
+        // 4. Consultar la lista actual de Firestore
+
+        uploadStatus.textContent =
+            "Comparando la lista con Firestore...";
+
+        const snapshotActual = await getDocs(
+            collection(db, "participantes")
+        );
+
+        const idsExcel = new Set(
+            participantesExcel.map(
+                participante => participante.numeroControl
+            )
+        );
+
+        const documentosEliminar = [];
+
+        snapshotActual.forEach(documento => {
+
+            if (!idsExcel.has(documento.id)) {
+                documentosEliminar.push(documento);
+            }
+
+        });
+
+        const idsActuales = new Set();
+
+        snapshotActual.forEach(documento => {
+            idsActuales.add(documento.id);
+        });
+
+        const totalNuevos = participantesExcel.filter(
+            participante => !idsActuales.has(
+                participante.numeroControl
+            )
+        ).length;
+
+        const totalActualizar = participantesExcel.length - totalNuevos;
+
+        const totalEliminar = documentosEliminar.length;
+
+        // 5. Pedir confirmación antes de cambiar datos
+
+        const resumen =
+            "Se sincronizará Firestore con el Excel.\n\n" +
+            `Participantes en el Excel: ${participantesExcel.length}\n` +
+            `Nuevos: ${totalNuevos}\n` +
+            `Existentes por actualizar: ${totalActualizar}\n` +
+            `Registros que se eliminarán: ${totalEliminar}\n\n` +
+            "Los registros eliminados dejarán de estar en la colección participantes.\n\n" +
+            "¿Deseas continuar?";
+
+        if (!window.confirm(resumen)) {
+            uploadStatus.textContent =
+                "Operación cancelada. No se realizaron cambios.";
+            uploadStatus.style.color = "#b7791f";
+            return;
+        }
+
+        // 6. Preparar todas las operaciones
+
+        const operaciones = [];
+
+        for (const participante of participantesExcel) {
+
+            const participanteRef = doc(
+                db,
+                "participantes",
+                participante.numeroControl
+            );
+
+            operaciones.push({
+                tipo: "guardar",
+                ref: participanteRef,
+                datos: {
+                    numeroControl: participante.numeroControl,
+                    nombre: participante.nombre,
+                    area: participante.area,
+                    rol: participante.rol,
+                    turno: participante.turno,
+                    actualizado: new Date().toISOString()
                 }
+            });
 
+        }
 
-                if (!auth.currentUser) {
+        for (const documento of documentosEliminar) {
 
-                    uploadStatus.textContent =
-                        "Debes iniciar sesión como administrador.";
+            operaciones.push({
+                tipo: "eliminar",
+                ref: documento.ref
+            });
 
-                    return;
+        }
 
-                }
+        // 7. Ejecutar en lotes de máximo 450 operaciones
 
+        const tamanoLote = 450;
+        let operacionesCompletadas = 0;
 
-                uploadStatus.textContent =
-                    "Leyendo archivo Excel...";
+        for (
+            let inicio = 0;
+            inicio < operaciones.length;
+            inicio += tamanoLote
+        ) {
 
+            const batch = writeBatch(db);
 
-                try {
+            const lote = operaciones.slice(
+                inicio,
+                inicio + tamanoLote
+            );
 
+            for (const operacion of lote) {
 
-                    /*
-                        Cargar SheetJS
-                        para leer XLSX
-                    */
+                if (operacion.tipo === "guardar") {
 
+                    batch.set(
+                        operacion.ref,
+                        operacion.datos,
+                        { merge: true }
+                    );
 
-                    const XLSX =
-                        await import(
-                            "https://cdn.sheetjs.com/xlsx-0.20.3/package/xlsx.mjs"
-                        );
+                } else {
 
-
-                    const arrayBuffer =
-                        await file.arrayBuffer();
-
-
-                    const workbook =
-                        XLSX.read(
-                            arrayBuffer,
-                            {
-                                type: "array"
-                            }
-                        );
-
-
-                    const firstSheet =
-                        workbook.Sheets[
-                            workbook.SheetNames[0]
-                        ];
-
-
-                    const rows =
-                        XLSX.utils.sheet_to_json(
-                            firstSheet,
-                            {
-                                defval: ""
-                            }
-                        );
-
-
-                    if (rows.length === 0) {
-
-                        uploadStatus.textContent =
-                            "El archivo no contiene registros.";
-
-                        return;
-
-                    }
-
-
-                    /*
-                        Columnas requeridas
-                    */
-
-
-                    const requiredColumns = [
-
-                        "numeroControl",
-
-                        "nombre",
-
-                        "area",
-
-                        "rol",
-
-                        "turno"
-
-                    ];
-
-
-                    const firstRow =
-                        rows[0];
-
-
-                    const missingColumns =
-                        requiredColumns.filter(
-                            column =>
-                                !(column in firstRow)
-                        );
-
-
-                    if (
-                        missingColumns.length > 0
-                    ) {
-
-                        uploadStatus.textContent =
-                            "Faltan columnas: " +
-                            missingColumns.join(", ");
-
-                        return;
-
-                    }
-
-
-                    uploadStatus.textContent =
-                        `Procesando ${rows.length} participantes...`;
-
-
-
-                    /*
-                        Firestore Batch
-                    */
-
-
-                    let batch =
-                        writeBatch(db);
-
-
-                    let operationCount = 0;
-
-                    let totalUploaded = 0;
-
-
-
-                    for (
-                        const row of rows
-                    ) {
-
-
-                        const numeroControl =
-                            String(
-                                row.numeroControl
-                            )
-                            .trim();
-
-
-                        if (!numeroControl) {
-
-                            continue;
-
-                        }
-
-
-                        const participanteRef =
-                            doc(
-                                db,
-                                "participantes",
-                                numeroControl
-                            );
-
-
-                        batch.set(
-
-                            participanteRef,
-
-                            {
-
-                                numeroControl:
-                                    numeroControl,
-
-                                nombre:
-                                    String(
-                                        row.nombre
-                                    ).trim(),
-
-                                area:
-                                    String(
-                                        row.area
-                                    ).trim(),
-
-                                rol:
-    String(
-        row.rol
-    ).trim(),
-
-turno:
-    String(
-        row.turno
-    ).trim(),
-
-actualizado:
-    new Date()
-    .toISOString()
-                            },
-
-                            {
-                                merge: true
-                            }
-
-                        );
-
-
-                        operationCount++;
-
-                        totalUploaded++;
-
-
-
-                        /*
-                            Firestore permite
-                            hasta 500 operaciones
-                            aproximadamente por batch.
-
-                            Usamos 450 para tener
-                            margen.
-                        */
-
-
-                        if (
-                            operationCount === 450
-                        ) {
-
-                            await batch.commit();
-
-
-                            batch =
-                                writeBatch(db);
-
-
-                            operationCount = 0;
-
-                        }
-
-                    }
-
-
-
-                    /*
-                        Subir operaciones restantes
-                    */
-
-
-                    if (
-                        operationCount > 0
-                    ) {
-
-                        await batch.commit();
-
-                    }
-
-
-
-                    uploadStatus.textContent =
-                        `✓ Actualización completada. ${totalUploaded} participantes procesados.`;
-
-
-                    uploadStatus.style.color =
-                        "#218739";
-
-
-                    excelFile.value = "";
-
-
-                    fileName.textContent =
-                        "Ningún archivo seleccionado";
-
-
-                }
-                catch (error) {
-
-                    console.error(error);
-
-
-                    uploadStatus.textContent =
-                        "Error al actualizar Firestore: " +
-                        error.message;
-
-
-                    uploadStatus.style.color =
-                        "#c0392b";
+                    batch.delete(operacion.ref);
 
                 }
 
             }
-        );
+
+            await batch.commit();
+
+            operacionesCompletadas += lote.length;
+
+            uploadStatus.textContent =
+                `Sincronizando... ${operacionesCompletadas} de ${operaciones.length} operaciones.`;
+
+        }
+
+        // 8. Mostrar el resultado
+
+        uploadStatus.textContent =
+            "✓ Sincronización completada.\n" +
+            `Participantes en el Excel: ${participantesExcel.length}. ` +
+            `Nuevos: ${totalNuevos}. ` +
+            `Actualizados: ${totalActualizar}. ` +
+            `Eliminados: ${totalEliminar}.`;
+
+        uploadStatus.style.color = "#218739";
+
+        excelFile.value = "";
+        fileName.textContent = "Ningún archivo seleccionado";
+
+    } catch (error) {
+
+        console.error(error);
+
+        uploadStatus.textContent =
+            "No se pudo completar la sincronización: " +
+            error.message;
+
+        uploadStatus.style.color = "#c0392b";
+
+    }
+
+});
 
     </script>
 
