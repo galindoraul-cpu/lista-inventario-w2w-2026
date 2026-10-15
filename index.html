@@ -1018,59 +1018,31 @@
 
 
 
-        <section class="information-grid">
+       
+<section class="information-grid">
 
+    <div class="info-card">
+        <span class="info-label">NÚMERO DE EMPLEADO</span>
+        <strong id="userControl">-</strong>
+    </div>
 
-            <div class="info-card">
+    <div class="info-card">
+        <span class="info-label">ÁREA</span>
+        <strong id="userArea">-</strong>
+    </div>
 
-                <span class="info-label">
-                    NÚMERO DE EMPLEADO
-                </span>
+    <div class="info-card">
+        <span class="info-label">ROL</span>
+        <strong id="userRole">-</strong>
+    </div>
 
-                < id="userControl">
-                    -
-                </strong>
+    <div class="info-card">
+        <span class="info-label">TURNO</span>
+        <strong id="userTurno">-</strong>
+    </div>
 
-            </div>
+</section>
 
-
-            <div class="info-card">
-
-                <span class="info-label">
-                    ÁREA
-                </span>
-
-                <strong id="userArea">
-                    -
-                </strong>
-
-            </div>
-
-
-            <div class="info-card">
-
-                <span class="info-label">
-                    ROL
-                </span>
-
-                <strong id="userRole">
-                    -
-                </strong>
-
-            </div>
-        <div class="info-card">
-
-    <span class="info-label">
-        TURNO
-    </span>
-
-    <strong id="userTurno">
-        -
-    </strong>
-
-</div>
-
-        </section>
 
 
 
@@ -1743,9 +1715,7 @@
                         data.rol ||
                         "Sin rol asignado";
 
-                    console.log("Elemento turno:", document.getElementById("userTurno"));
-console.log("Datos del participante:", data);
-                    
+                  
                     document
     .getElementById("userTurno")
     .textContent =
