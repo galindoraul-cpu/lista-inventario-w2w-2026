@@ -1027,7 +1027,7 @@
                     NÚMERO DE EMPLEADO
                 </span>
 
-                <strong id="userControl">
+                < id="userControl">
                     -
                 </strong>
 
@@ -1058,7 +1058,17 @@
                 </strong>
 
             </div>
+        <div class="info-card">
 
+    <span class="info-label">
+        TURNO
+    </span>
+
+    <strong id="userTurno">
+        -
+    </strong>
+
+</div>
 
         </section>
 
@@ -1152,17 +1162,15 @@
                 </p>
 
 
-                <div class="column-list">
+               <div class="column-list">
 
-                    <span>numeroControl</span>
+    <span>numeroControl</span>
+    <span>nombre</span>
+    <span>area</span>
+    <span>rol</span>
+    <span>turno</span>
 
-                    <span>nombre</span>
-
-                    <span>area</span>
-
-                    <span>rol</span>
-
-                </div>
+</div>
 
             </div>
 
@@ -1734,7 +1742,11 @@
                         .textContent =
                         data.rol ||
                         "Sin rol asignado";
-
+document
+    .getElementById("userTurno")
+    .textContent =
+    data.turno ||
+    "Sin turno asignado";
 
                     message.textContent = "";
 
@@ -2073,7 +2085,9 @@
 
                         "area",
 
-                        "rol"
+                        "rol",
+
+                        "turno"
 
                     ];
 
@@ -2169,14 +2183,18 @@
                                     ).trim(),
 
                                 rol:
-                                    String(
-                                        row.rol
-                                    ).trim(),
+    String(
+        row.rol
+    ).trim(),
 
-                                actualizado:
-                                    new Date()
-                                    .toISOString()
+turno:
+    String(
+        row.turno
+    ).trim(),
 
+actualizado:
+    new Date()
+    .toISOString()
                             },
 
                             {
