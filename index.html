@@ -1742,7 +1742,11 @@
                         .textContent =
                         data.rol ||
                         "Sin rol asignado";
-document
+
+                    console.log("Elemento turno:", document.getElementById("userTurno"));
+console.log("Datos del participante:", data);
+                    
+                    document
     .getElementById("userTurno")
     .textContent =
     data.turno ||
